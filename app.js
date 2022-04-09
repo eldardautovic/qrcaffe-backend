@@ -8,15 +8,15 @@ require("dotenv/config");
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
 app.use(express.json());
+app.use(cors());
 
 //routes
 const caffes = require("./routes/caffes");
+const login = require("./routes/login");
 
 app.use("/caffes", caffes);
-
+app.use("/login", login);
 //starting server
 
 app.listen(process.env.PORT || 3000, () => {

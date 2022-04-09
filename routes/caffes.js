@@ -16,19 +16,31 @@ router.post("/", (req, res) => {
   const desired = req.body.pw;
   const ip = req.body.ip;
   const name = req.body.name;
+  const signature = req.body.signature;
 
-  if (!checkIp(ip)) return res.send("IP Adress invalid.").status(504);
+  if (signature != "eld4Nev0lj4") return res.send("Access denied").status(401);
+
+  if (!checkIp(ip))
+    return (
+      res.send("IP Adress invalid.").status(400),
+      costumlog("err", "", "", "IP Adress invalid while creating new caffe.")
+    );
 
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(desired, salt, (err, hash) => {
       handle.query(
         `INSERT INTO caffes (\`name\`, \`ip\`, \`pass\`) VALUES ('${name}', '${ip}', '${hash}')`,
-        (err, rows) => {
+        (err, result) => {
           if (err)
-            res.send("Unable to insert into database.").status(504),
-              console.log(err);
+            res.send("Unable to insert into database.").status(500),
+              costumlog(
+                "err",
+                "",
+                "",
+                "!!!Unable to insert into DB check FAST!!!"
+              );
 
-          res.send(`${name} kafic uspjesno kreiran.`).status(200);
+          res.json({ id: result.insertId });
           costumlog("endpoint", "caffes", "POST", "");
         }
       );
