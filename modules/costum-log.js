@@ -1,4 +1,4 @@
-const costumlog = (type, path, method, errmsg) => {
+const costumlog = (type, path, method, errmsg = "") => {
   if (type == "err") console.log(`\t\t[!] ${errmsg}`);
 
   if (type == "endpoint")

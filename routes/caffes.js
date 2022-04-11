@@ -12,6 +12,68 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/caffe/:caffeId", (req, res) => {
+  if (req.params.caffeId == undefined)
+    return res.send("Nemoj sql injectati. <:)");
+  handle.query(
+    `SELECT ip, name from caffes WHERE id = ${req.params.caffeId}`,
+    (err, rows) => {
+      res.send(rows[0]);
+      costumlog("endpoint", "caffes/caffe", "GET", "");
+    }
+  );
+});
+
+router.put("/caffe", (req, res) => {
+  const desired = req.body.pass;
+
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(desired, salt, (err, hash) => {
+      req.body.pass == "N/A"
+        ? handle.query(
+            `UPDATE \`caffes\` SET  \`ip\` = '${req.body.ip}', \`name\` = '${req.body.name}' WHERE \`id\` = ${req.body.id}`,
+            (err, rows) => {
+              if (err)
+                return (
+                  costumlog(
+                    "err",
+                    "",
+                    "",
+                    "It isn't possible to update caffe data!"
+                  ),
+                  res.status(500)
+                );
+              else
+                return (
+                  costumlog("endpoint", "/caffes/caffe", "PUT", ""),
+                  res.send("Podaci uspjesno azurirani.").status(200)
+                );
+            }
+          )
+        : handle.query(
+            `UPDATE \`caffes\` SET \`pass\` = '${hash}', \`ip\` = '${req.body.ip}', \`name\` = '${req.body.name}' WHERE \`id\` = ${req.body.id}`,
+            (err, rows) => {
+              if (err)
+                return (
+                  costumlog(
+                    "err",
+                    "",
+                    "",
+                    "It isn't possible to update caffe data!"
+                  ),
+                  res.status(500)
+                );
+              else
+                return (
+                  costumlog("endpoint", "/caffes/caffe", "PUT", ""),
+                  res.send("Podaci uspjesno azurirani.").status(200)
+                );
+            }
+          );
+    });
+  });
+});
+
 router.post("/", (req, res) => {
   const desired = req.body.pw;
   const ip = req.body.ip;

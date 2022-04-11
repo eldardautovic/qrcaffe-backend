@@ -8,7 +8,8 @@ const checkIp = require("../modules/ipchecker");
 router.post("/", (req, res) => {
   const pw = req.body.pw;
 
-  if (pw != "eld4Nev0lj4") return res.send("Password incorrect.").status(400);
+  if (pw != "eld4Nev0lj4")
+    return res.status(400).send({ message: "Not authorized" });
   else return res.send("Password correct, welcome ELD4.").status(400);
 });
 
