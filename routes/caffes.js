@@ -110,4 +110,23 @@ router.post("/", (req, res) => {
   });
 });
 
+router.delete("/caffe/:caffeId", (req, res) => {
+  handle.query(
+    `DELETE FROM caffes WHERE id = ${req.params.caffeId}`,
+    (err, rows) => {
+      if (err)
+        return (
+          costumlog(
+            "err",
+            "",
+            "",
+            "A problem happened while trying to delete a caffe."
+          ),
+          res.send("Nemoguce obrisati.").status(500)
+        );
+      else res.send("Uspjesno obrisan.").status(200);
+    }
+  );
+});
+
 module.exports = router;

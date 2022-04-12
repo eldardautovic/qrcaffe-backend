@@ -14,9 +14,11 @@ app.use(cors());
 //routes
 const caffes = require("./routes/caffes");
 const login = require("./routes/login");
+const orders = require("./routes/orders");
 
 app.use("/caffes", caffes);
 app.use("/login", login);
+app.use("/orders", orders);
 //starting server
 
 app.listen(process.env.PORT || 3000, () => {
