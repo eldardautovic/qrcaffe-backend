@@ -45,7 +45,7 @@ router.put("/caffe", (req, res) => {
                 );
               else
                 return (
-                  costumlog("endpoint", "/caffes/caffe", "PUT", ""),
+                  costumlog("endpoint", "caffes/caffe", "PUT", ""),
                   res.send("Podaci uspjesno azurirani.").status(200)
                 );
             }
@@ -65,7 +65,7 @@ router.put("/caffe", (req, res) => {
                 );
               else
                 return (
-                  costumlog("endpoint", "/caffes/caffe", "PUT", ""),
+                  costumlog("endpoint", "caffes/caffe", "PUT", ""),
                   res.send("Podaci uspjesno azurirani.").status(200)
                 );
             }
