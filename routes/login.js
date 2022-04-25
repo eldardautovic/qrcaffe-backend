@@ -51,8 +51,6 @@ router.post("/:caffeId", (req, res) => {
         res.json({ success: true, token: token }).status(200);
         costumlog("endpoint", "login", "GET", "");
       }
-
-      console.log(rows[0].pass);
     }
   );
 });
