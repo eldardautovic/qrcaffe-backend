@@ -15,12 +15,10 @@ router.post("/admin", (req, res) => {
 
 router.post("/:caffeId", (req, res) => {
   const pw = req.body.pass;
-  const caffe = req.params.caffeId;
-
-  console.log(req.params.pass);
+  const caffe = req.body.caffeId;
 
   handle.query(
-    `SELECT \`pass\`, \`name\` FROM \`caffes\` WHERE \`id\` = ${req.params.caffeId}`,
+    `SELECT \`pass\`, \`name\` FROM \`caffes\` WHERE \`id\` = ${req.body.caffeId}`,
     (err, rows) => {
       if (err)
         return (
