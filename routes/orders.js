@@ -8,14 +8,14 @@ router.post("/", (req, res) => {
 
   let month = timestamp.getMonth();
   let year = timestamp.getFullYear();
-  let day = timestamp.getDay();
+  let day = timestamp.getDate();
 
   let hour = timestamp.getHours();
   let minute = timestamp.getMinutes();
 
   handle.query(
-    `INSERT INTO orders (\`content\`, \`timestamp\`, \`note\` ,\`caffeId\`) VALUES \
-    ('${req.body.content}', '${hour}:${minute}, ${day}/${month}/${year}', '${req.body.note}', ${req.body.caffeId})`,
+    `INSERT INTO orders (\`content\`, \`timestamp\`, \`note\` ,\`caffeId\`, \`tableId\`) VALUES \
+    ('${req.body.content}', '${hour}:${minute}, ${day}/${month}/${year}', '${req.body.note}', ${req.body.caffeId}, ${req.body.tableId})`,
     (err, rows) => {
       if (err)
         return (
@@ -29,7 +29,8 @@ router.post("/", (req, res) => {
             .send(`Doslo je do greske prilikom unosenja. (${err.message})`)
             .status(500)
         );
-
+      var io = req.app.get("socketio");
+      io.emit("createdOrder");
       res.send("Uspjesno dodana narudzba.").status(200);
     }
   );
@@ -37,7 +38,7 @@ router.post("/", (req, res) => {
 
 router.get("/:caffeId", (req, res) => {
   handle.query(
-    `SELECT * FROM orders WHERE caffeId = ${req.params.caffeId}`,
+    `SELECT * FROM orders WHERE caffeId = ${req.params.caffeId} WHERE zavrsena = 0`,
     (err, rows) => {
       if (err)
         return (

@@ -3,10 +3,16 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var con = require("./modules/connection");
 const costumlog = require("./modules/costum-log");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 require("dotenv/config");
-
-const app = express();
 
 app.use(express.json());
 app.use(cors());
@@ -19,9 +25,12 @@ const orders = require("./routes/orders");
 app.use("/caffes", caffes);
 app.use("/login", login);
 app.use("/orders", orders);
-//starting server
+app.set("socketio", io);
 
-app.listen(process.env.PORT || 3000, () => {
+//starting server
+io.on("createdOrder", () => console.log("created ordeer"));
+
+server.listen(process.env.PORT || 3000, () => {
   console.log("Server starting, trying to connect to the database...");
 
   con.connect((err) => {
