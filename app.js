@@ -34,7 +34,7 @@ server.listen(process.env.PORT || 3000, () => {
   console.log("Server starting, trying to connect to the database...");
 
   con.connect((err) => {
-    if (err) costumlog("err", "/", "/", "connecting to database");
+    if (err) return costumlog("err", "/", "/", "connecting to database");
 
     console.log("\t\t[+] Connection was established with the database.\n\n");
   });

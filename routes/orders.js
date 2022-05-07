@@ -38,7 +38,7 @@ router.post("/", (req, res) => {
 
 router.get("/:caffeId", (req, res) => {
   handle.query(
-    `SELECT * FROM orders WHERE caffeId = ${req.params.caffeId} WHERE zavrsena = 0`,
+    `SELECT * FROM orders WHERE caffeId = ${req.params.caffeId} AND \`zavrsena\` = 0 ORDER BY timestamp ASC`,
     (err, rows) => {
       if (err)
         return (
