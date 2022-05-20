@@ -58,4 +58,28 @@ router.get("/:caffeId", (req, res) => {
   );
 });
 
+router.put("/:orderId", (req, res) => {
+  handle.query(
+    `UPDATE orders SET \`zavrsena\` = 1 WHERE id = ${req.params.orderId}`,
+    (err) => {
+      if (err)
+        return (
+          costumlog(
+            "err",
+            "",
+            "",
+            `Error happened while trying to finish order. (${err.message})`
+          ),
+          res
+            .send("Doslo je do greske prilikom zavrsavanja narudzbe.")
+            .status(500)
+        );
+
+      var io = req.app.get("socketio");
+      io.emit("completedOrder");
+      res.send("Uspjesno zavrsena narudzba.").status(200);
+    }
+  );
+});
+
 module.exports = router;
