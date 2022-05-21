@@ -16,11 +16,22 @@ require("dotenv/config");
 
 app.use(express.json());
 app.use(cors());
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 //routes
 const caffes = require("./routes/caffes");
 const login = require("./routes/login");
 const orders = require("./routes/orders");
+const verifyToken = require("./modules/authjwt");
+
+app.use((req, res, next) => {
+  const authToken = verifyToken(req.headers.bearertoken);
+
+  if (authToken == false) req.auth = false;
+  else req.auth = authToken;
+
+  next();
+});
 
 app.use("/caffes", caffes);
 app.use("/login", login);
@@ -34,7 +45,8 @@ server.listen(process.env.PORT || 3000, () => {
   console.log("Server starting, trying to connect to the database...");
 
   con.connect((err) => {
-    if (err) return costumlog("err", "/", "/", "connecting to database");
+    if (err)
+      return costumlog("err", "/", "/", "Error while connecting to database");
 
     console.log("\t\t[+] Connection was established with the database.\n\n");
   });

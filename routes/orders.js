@@ -1,9 +1,10 @@
 const express = require("express");
+const requireAuth = require("../middlewares/authMiddle");
 const handle = require("../modules/connection");
 const costumlog = require("../modules/costum-log");
 var router = express.Router();
 
-router.post("/", (req, res) => {
+router.post("/", requireAuth, (req, res) => {
   let timestamp = new Date();
 
   let month = timestamp.getMonth();
@@ -36,7 +37,24 @@ router.post("/", (req, res) => {
   );
 });
 
-router.get("/:caffeId", (req, res) => {
+router.get("/statement/:caffeId", (req, res) => {
+  handle.query(
+    `SELECT * FROM orders where caffeId = ${req.params.caffeId}`,
+    (err, rows) => {
+      if (err)
+        return (
+          costumlog("err", "", "", "Error happened while getting all orders."),
+          res
+            .send("Doslo je do greske prilikom dobijanja svih narudzbi.")
+            .status(500)
+        );
+
+      res.send(rows);
+    }
+  );
+});
+
+router.get("/:caffeId", requireAuth, (req, res) => {
   handle.query(
     `SELECT * FROM orders WHERE caffeId = ${req.params.caffeId} AND \`zavrsena\` = 0 ORDER BY timestamp ASC`,
     (err, rows) => {
@@ -58,7 +76,7 @@ router.get("/:caffeId", (req, res) => {
   );
 });
 
-router.put("/:orderId", (req, res) => {
+router.put("/:orderId", requireAuth, (req, res) => {
   handle.query(
     `UPDATE orders SET \`zavrsena\` = 1 WHERE id = ${req.params.orderId}`,
     (err) => {
