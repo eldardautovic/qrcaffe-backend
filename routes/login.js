@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const costumlog = require("../modules/costum-log");
 var router = express.Router();
 const generateAccessToken = require("../modules/generatejwt");
+const { route } = require("./orders");
+const requireAuth = require("../middlewares/authMiddle");
 
 router.post("/admin", (req, res) => {
   const pw = req.body.pw;
@@ -51,6 +53,10 @@ router.post("/:caffeId", (req, res) => {
       }
     }
   );
+});
+
+router.get("/verify/:caffeId", requireAuth, (req, res) => {
+  res.status(200);
 });
 
 module.exports = router;

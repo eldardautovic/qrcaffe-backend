@@ -53,6 +53,22 @@ router.get("/statement/:caffeId", (req, res) => {
     }
   );
 });
+router.get("/caffe-statement/:caffeId", (req, res) => {
+  handle.query(
+    `SELECT * FROM orders where caffeId = ${req.params.caffeId}`,
+    (err, rows) => {
+      if (err)
+        return (
+          costumlog("err", "", "", "Error happened while getting all orders."),
+          res
+            .send("Doslo je do greske prilikom dobijanja svih narudzbi.")
+            .status(500)
+        );
+
+      res.send(rows);
+    }
+  );
+});
 
 router.get("/:caffeId", requireAuth, (req, res) => {
   handle.query(
@@ -70,7 +86,6 @@ router.get("/:caffeId", requireAuth, (req, res) => {
             .send("Doslo je do greske prilikom dobavljanja izvjestaja.")
             .status(500)
         );
-
       res.send(rows).status(200);
     }
   );
