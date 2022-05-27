@@ -4,7 +4,7 @@ const handle = require("../modules/connection");
 const costumlog = require("../modules/costum-log");
 var router = express.Router();
 
-router.post("/", requireAuth, (req, res) => {
+router.post("/", (req, res) => {
   let timestamp = new Date();
 
   let month = timestamp.getMonth();
