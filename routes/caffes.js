@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 
 router.get("/caffe/:caffeId", (req, res) => {
   if (req.params.caffeId == undefined)
-    return res.send("Nemoj sql injectati. <:)");
+    return res.send("Nemoj raditi ono sto ne smijes :D");
   handle.query(
     `SELECT ip, name from caffes WHERE id = ${req.params.caffeId}`,
     (err, rows) => {

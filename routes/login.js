@@ -55,8 +55,4 @@ router.post("/:caffeId", (req, res) => {
   );
 });
 
-router.get("/verify/:caffeId", requireAuth, (req, res) => {
-  res.status(200);
-});
-
 module.exports = router;

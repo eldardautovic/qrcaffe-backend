@@ -15,8 +15,8 @@ router.post("/", (req, res) => {
   let minute = timestamp.getMinutes();
 
   handle.query(
-    `INSERT INTO orders (\`content\`, \`timestamp\`, \`note\` ,\`caffeId\`, \`tableId\`) VALUES \
-    ('${req.body.content}', '${hour}:${minute}, ${day}/${month}/${year}', '${req.body.note}', ${req.body.caffeId}, ${req.body.tableId})`,
+    `INSERT INTO orders (\`content\`, \`timestamp\`, \`note\` ,\`caffeId\`, \`tableId\`, \`price\`) VALUES \
+    ('${req.body.content}', '${hour}:${minute}, ${day}/${month}/${year}', '${req.body.note}', ${req.body.caffeId}, ${req.body.tableId}, ${req.body.price})`,
     (err, rows) => {
       if (err)
         return (
@@ -115,4 +115,23 @@ router.put("/:orderId", requireAuth, (req, res) => {
   );
 });
 
+router.get("/user/:caffeId", (req, res) => {
+  handle.query(
+    `SELECT name, ip FROM caffes WHERE id = ${req.params.caffeId}`,
+    (err, rows) => {
+      if (err)
+        return (
+          costumlog(
+            `err`,
+            ``,
+            "",
+            "Error happened while trying to get caffe info."
+          ),
+          res.send("Interna greska servera.").status(500)
+        );
+
+      res.send(rows[0]);
+    }
+  );
+});
 module.exports = router;
